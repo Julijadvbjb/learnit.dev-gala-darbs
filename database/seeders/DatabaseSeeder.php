@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Course;
+use App\Models\Assignment;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +13,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        Course::create(['name' => 'Learn PHP','category' => 'Computer science', 'lecturer'=> 'Jānis Būda', 'duration'=> '4 months']);
+        Course::create(['name' => 'English lessons', 'category' => 'Languages', 'lecturer'=> 'Ann Miningway', 'duration'=> '9 months' ]);
+        Course::create(['name' => 'Everything about Crypto', 'category' => 'Economics', 'lecturer'=> 'Krish Manutra', 'duration'=> '4 weeks']);
+        Course::create(['name' => 'History 101', 'category' => 'History', 'lecturer'=> 'Albert Green', 'duration'=> '3 weeks']);
+     
+        #approach #1 - create instance of manufacturer, call save on collection
+        // $english = Course::where('name', 'English lessons')->first();
+        // $introquiz = new Assignment();
+        // $introquiz->name = 'Introductory quiz';
+        // $introquiz->course_id = 2;
+        // $introquiz->duedate = 'Introductory quiz';
+        // $english->assignments()->save($introquiz);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // $history101 = Course::where('name', 'History 101')->first();
+        // $knowledgetest = new Assignment();
+        // $knowledgetest->name = 'Knowledge test ';
+        // $history101->assignments()->save($knowledgetest);
+        
     }
 }
