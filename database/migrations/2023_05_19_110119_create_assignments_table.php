@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('feedback_id')->constrained()->cascadeOnDelete();
             $table->string('task');
             $table->string('duedate');
-            $table->integer('grade');
-            $table->string('comments') ->default('none');
             $table->timestamps();
         });
     }
