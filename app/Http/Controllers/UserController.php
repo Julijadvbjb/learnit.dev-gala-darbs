@@ -4,6 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Validation\Rules\Password;
+
 
 class UserController extends Controller
 {
@@ -11,13 +18,14 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        // Retrieve all users
-        $users = User::all();
+{
+    // Retrieve all users
+    $users = User::all();
 
-        // Return the users to a view or JSON response
-        // Example: return view('users.index', compact('users'));
-    }
+    // Return the users to a view
+    return view('users', compact('users'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -33,26 +41,38 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers(), 'confirmed'],
+            'role' => ['required', 'string', Rule::in(['student', 'lecturer'])],
         ]);
-
-        // Create a new user instance
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
-        // Set any other properties as needed
-
-        // Save the user to the database
-        $user->save();
-
-        // Redirect or return a response as needed
-        // Example: return redirect()->route('users.index')->with('success', 'User created successfully');
+    
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+        ]);
+    
+        $role = $request->input('role');
+    
+        if($role == 'student'){
+            //Assign student role to user
+            $user->assignRole('student');
+        }
+        else if($role == 'lecturer'){
+            //Assign teacher role to user
+            $user->assignRole('lecturer');
+        }
+    
+        event(new Registered($user));
+    
+        Auth::login($user);
+    
+        return redirect(RouteServiceProvider::HOME);
     }
+    
 
     /**
      * Display the specified resource.

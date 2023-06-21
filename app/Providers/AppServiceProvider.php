@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Gate;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -12,13 +13,15 @@ class AppServiceProvider extends ServiceProvider
    
 public function boot()
 {
-    $this->registerPermissions();
+    Gate::define('is-admin', function ($user){
+        return $user->name == 'admin';
+    });
 }
 
 protected function registerPermissions()
 {
-    // Role::create(['name' => 'student']);
-    // Role::create(['name' => 'lecturer']);
+
+    
 }
 
 }

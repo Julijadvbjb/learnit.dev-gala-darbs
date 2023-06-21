@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-
+use App\Models\Feedback;
+use Illuminate\Support\Facades\Auth;
 
 class FeedbackController extends Controller
 {
@@ -29,7 +30,18 @@ class FeedbackController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'grade' => 'required',
+            'comment' => 'required',
+        ]);
+
+        $feedback = new Feedback;
+        $feedback->user_id = Auth::id(); // or replace with the actual user ID
+        $feedback->grade = $request->input('grade');
+        $feedback->comment = $request->input('comment');
+        $feedback->save();
+
+        return redirect()->back()->with('success', 'Feedback successfully added!');
     }
 
     /**

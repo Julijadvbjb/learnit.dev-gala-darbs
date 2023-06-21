@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('enrollments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->string('lecturer'); 
-            $table->string('duration');
-            $table->string('description');
+            $table->foreignId('user_id'); // the student
+            $table->foreignId('course_id');
+            $table->boolean('completed')->default(false);
             $table->timestamps();
         });
+    
     }
-
 
     /**
      * Reverse the migrations.

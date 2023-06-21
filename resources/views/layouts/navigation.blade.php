@@ -3,12 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    </a>
-                </div>
+              
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -18,12 +13,20 @@
                     <x-nav-link :href="route('course.index')" :active="request()->routeIs('course.index')">
                         {{ __('Courses') }}
                     </x-nav-link>
-                    <x-nav-link >
+                    <x-nav-link :href="route('lecturers.index')" :active="request()->routeIs('lecturers.index')" >
                         {{ __('Lecturers') }}
                     </x-nav-link>
-                    <x-nav-link >
-                        {{ __('Students') }}
+                    <x-nav-link :href="route('mycourses.show')" :active="request()->routeIs('mycourses.show')" >
+                        {{ __('My courses') }}
                     </x-nav-link>
+
+                    @can('is-admin')
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                        {{ __('Users') }}
+                   </x-nav-link>
+                   @endcan
+                    
+                 
                 </div>
             </div>
 

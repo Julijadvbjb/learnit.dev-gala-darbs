@@ -15,4 +15,14 @@ class Assignment extends Model
     {
         return $this->belongsTo(Course::class);
     }
+    // Assignment.php
+
+public function feedbacks()
+{
+    return $this->hasMany(Feedback::class);
+}
+public function submissions()
+{
+    return $this->hasMany(Enrollment::class);
+}
 }

@@ -7,46 +7,46 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
 
+            @foreach ($courses as $course)
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                    <div class="p-6 text-gray-900">
+                        <h3 class="font-semibold text-lg">{{ $course->name }}</h3>
+                        <p><strong>Category:</strong> {{ $course->category->name }}</p>
+                        <p><strong>Lecturer:</strong> {{ optional($course->lecturer)->name }}</p>
 
-
-                <div class="p-6 text-gray-900">
-
-                    
-                    <table class="min-w-full text-left text-sm font-light">
-                        <thead class="border-b font-medium dark:border-neutral-500"
-                        <tr>
-                            <th scope="col" class="px-6 py-4">Course name</th>
-                            <th scope="col" class="px-6 py-4">Category</th>
-                            <th scope="col" class="px-6 py-4">Lecturer</th>
-                            <th scope="col" class="px-6 py-4">Duration</th>
-                        </tr>
-                        </thead>
-
-                        @foreach ($courses as $course)
-                            <tr  class="border-b dark:border-neutral-500">
-                                <td class="whitespace-nowrap px-6 py-4">{{ $course->name }}</td>
-                                <td lass="whitespace-nowrap px-6 py-4">{{ $course->category->name }}</td>
-                                <td lass="whitespace-nowrap px-6 py-4">{{ $course->lecturer }}</td>
-                                <td lass="whitespace-nowrap px-6 py-4">{{ $course->duration }}</td>
-                                
-                                <td lass="whitespace-nowrap px-6 py-4">
-                                
-                                <a href="{{ route('course.show', ['id' => $course->id]) }}">Show </a>
+                        <div class="mt-4">
+                            <a href="{{ route('course.show', ['id' => $course->id]) }}">Show</a>
+                            @can('is-admin')
                                 <form action="{{ route('course.destroy', $course->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                     <button type="submit">Delete</button>
+                                    <button type="submit" class="ml-4">Delete</button>
+                                </form>
+                            @endcan
+                            @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+                            @auth
+                                @if (!auth()->user()->enrolledCourses->contains($course))
+                                    <form action="{{ route('course.enroll', ['course' => $course->id]) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="ml-4">Enroll</button>
                                     </form>
-                                
-                                </td>
-                            </tr>
-                        @endforeach
-                    </table>
-                 <h3><a href="{{ route('course.create') }}">Create new course</a></h3>            
+                                @endif
+                            @endauth
+                        </div>
+                    </div>
                 </div>
+            @endforeach
+            @can('is-admin')
+            <div class="p-6 text-gray-900">
+                <a href="{{ route('course.create') }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create new course</a>
             </div>
+            @endcan
         </div>
     </div>
 </x-app-layout>

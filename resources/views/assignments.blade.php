@@ -13,6 +13,8 @@
                     <h2 class="mb-4 font-bold">Current assignments</h2>
                     @if ($assignments->count() > 0)
                         @foreach ($assignments as $assignment)
+                        <h3 class="pt-2 pb-1 text-bold">Title</h3>
+                            <p>{{ $assignment->title }}</p>
                             <h3 class="pt-2 pb-1 text-bold">Task</h3>
                             <p>{{ $assignment->task }}</p>
                             <h3 class="pt-2 pb-1 text-bold">Duedate</h3>

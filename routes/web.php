@@ -34,6 +34,28 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
+    Route::middleware(['auth'])->group(function () {
+        // Enroll in a course
+        Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
+    
+        // Show and submit assignments
+        Route::get('/courses/{course}/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
+        Route::get('/assignments/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
+        Route::post('/assignments/{assignment}/submit', [AssignmentController::class, 'submit'])->name('assignments.submit');
+    });
+    
+    #lecturers
+    Route::get('/lecturers', 'App\Http\Controllers\LecturerController@index')->name('lecturer.index');
+
+    Route::get('/lecturers', [App\Http\Controllers\LecturerController::class, 'index'])->name('lecturers.index');
+    Route::get('/lecturers/{id}', [App\Http\Controllers\LecturerController::class, 'show'])->name('lecturer.show');
+    Route::delete('/lecturers/{lecturer}', [App\Http\Controllers\LecturerController::class, 'destroy'])->name('lecturer.destroy');
+    Route::get('/lecturers/create', [App\Http\Controllers\LecturerController::class, 'create'])->name('lecturer.create');
+
+    #users
+    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+
+
     # Course routes
     Route::get('/courses', [CourseController::class, 'index'])->name('course.index');
     Route::get('/courses/create', [CourseController::class, 'create'])->name('course.create');
@@ -50,6 +72,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/assignments/{id}/edit', [AssignmentController::class, 'edit'])->name('assignments.edit');
     Route::put('/assignments/{id}', [AssignmentController::class, 'update'])->name('assignments.update');
     Route::delete('/assignments/{id}', [AssignmentController::class, 'destroy'])->name('assignments.destroy');
+
+    Route::middleware(['auth'])->group(function () {
+        // Enroll in a course
+        Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
+        Route::get('/mycourses', [CourseController::class, 'showEnrolledCourses'])->name('mycourses.show');
+        Route::get('/course/{id}/mycourse', [CourseController::class, 'myCourse'])->name('course.mycourse');
+
+        // Show and submit assignments
+        Route::get('/courses/{course}/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
+        Route::get('/assignments/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
+        Route::post('/assignments/{assignment}/submit', [AssignmentController::class, 'submit'])->name('assignments.submit');
+    });
+    Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
+
 });
 
 require __DIR__.'/auth.php';

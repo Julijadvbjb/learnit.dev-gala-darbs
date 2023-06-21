@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Lecturer;
+
 
 class Course extends Model
 {
@@ -11,11 +13,22 @@ class Course extends Model
     protected $fillable = [
         'name',
         'category_id',
-        'lecturer',
-        'duration',
+        'lecturer_id',
         'description',
     ];
-    public function assignments()
+// Course.php
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+public function enrolledUsers()
+{
+    return $this->belongsToMany(User::class, 'enrollments')->withPivot('completed');
+}
+
+public function assignments()
 {
     return $this->hasMany(Assignment::class);
 }
@@ -23,6 +36,10 @@ class Course extends Model
     public function category()
 {
     return $this->belongsTo(Category::class);
+}
+public function lecturer()
+{
+    return $this->belongsTo(Lecturer::class);
 }
 
 }

@@ -37,22 +37,15 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div>
-                                @error('lecturer')
-                                <div class="alert">{{ $message }}</div>
-                                @enderror
-                                <label for="lecturer">Lecturer</label>
-                                <input id="lecturer" name="lecturer" type="text" value="{{ old('lecturer', isset($course) ? $course->lecturer : '') }}" />
-                            </div>
-
-                            <div>
-                                @error('duration')
-                                <div class="alert">{{ $message }}</div>
-                                @enderror
-                                <label for="duration">Duration</label>
-                                <input id="duration" name="duration" type="text" value="{{ old('duration', isset($course) ? $course->duration : '') }}" />
-                            </div>
+                            <label for="lecturer_id">Lecturer</label>
+                                <select name="lecturer_id" id="lecturer_id">
+                                  <option value="">Pick a lecturer</option>
+                                     @foreach ($lecturers as $lecturer)
+                                         <option value="{{ $lecturer->id }}" {{ old('lecturer_id', isset($course) && $course->lecturer_id == $lecturer->id ? 'selected' : '') }}>
+                                       {{ $lecturer->name }}
+                                     </option>
+                                  @endforeach
+                                </select>
 
                             <div>
                                 @error('description')
