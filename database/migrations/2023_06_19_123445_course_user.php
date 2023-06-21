@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedback', function (Blueprint $table) {
-            $table->id();
+        Schema::create('course_user', function (Blueprint $table) {
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->integer('grade')->unsigned()->nullable()->default(null);
-            $table->unsignedTinyInteger('grade')->nullable()->default(null)->unsigned();
-            $table->foreign('grade')->references('id')->on('grades');
-            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

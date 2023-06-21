@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+
 
 class FeedbackController extends Controller
 {
@@ -11,7 +13,7 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        //
+        return "This is your feedback";
     }
 
     /**

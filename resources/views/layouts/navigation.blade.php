@@ -13,7 +13,16 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Home') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('course.index')" :active="request()->routeIs('course.index')">
+                        {{ __('Courses') }}
+                    </x-nav-link>
+                    <x-nav-link >
+                        {{ __('Lecturers') }}
+                    </x-nav-link>
+                    <x-nav-link >
+                        {{ __('Students') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -71,6 +80,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

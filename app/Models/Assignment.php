@@ -9,11 +9,10 @@ class Assignment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['task', 'duedate'];
 
-    public function Course()
+    public function course()
     {
         return $this->belongsTo(Course::class);
     }
 }
-

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -11,7 +12,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        // Retrieve all users
+        $users = User::all();
+
+        // Return the users to a view or JSON response
+        // Example: return view('users.index', compact('users'));
     }
 
     /**
@@ -19,7 +24,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        // Show the create user form
+        // Example: return view('users.create');
     }
 
     /**
@@ -27,7 +33,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+        ]);
+
+        // Create a new user instance
+        $user = new User();
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = bcrypt($request->input('password'));
+        // Set any other properties as needed
+
+        // Save the user to the database
+        $user->save();
+
+        // Redirect or return a response as needed
+        // Example: return redirect()->route('users.index')->with('success', 'User created successfully');
     }
 
     /**
@@ -35,7 +59,11 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Find the user by ID
+        $user = User::findOrFail($id);
+
+        // Return the user to a view or JSON response
+        // Example: return view('users.show', compact('user'));
     }
 
     /**
@@ -43,7 +71,11 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // Find the user by ID
+        $user = User::findOrFail($id);
+
+        // Show the edit user form
+        // Example: return view('users.edit', compact('user'));
     }
 
     /**
@@ -51,7 +83,29 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Find the user by ID
+        $user = User::findOrFail($id);
+
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'sometimes|min:8',
+        ]);
+
+        // Update the user properties
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        if ($request->has('password')) {
+            $user->password = bcrypt($request->input('password'));
+        }
+        // Update any other properties as needed
+
+        // Save the updated user to the database
+        $user->save();
+
+        // Redirect or return a response as needed
+        // Example: return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
     /**
@@ -59,6 +113,13 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Find the user by ID
+        $user = User::findOrFail($id);
+
+        // Delete the user from the database
+        $user->delete();
+
+        // Redirect or return a response as needed
+        // Example: return redirect()->route('users.index')->with('success', 'User deleted successfully');
     }
 }
