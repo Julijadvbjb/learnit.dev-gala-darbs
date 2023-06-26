@@ -17,96 +17,98 @@ class AssignmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($id)
+    public function index(Course $course)
     {
-        $course = Course::find($id);
         $assignments = $course->assignments;
-
         return view('assignments', compact('assignments', 'course'));
     }
+    
+    
+    
+    
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Course $course)
     {
-        // Show the form for creating a new assignment
-        return view('assignments.create');
+        return view('assignmentscreate', compact('course'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'task' => 'required',
-            'duedate' => 'required',
-        ]);
+public function store(Request $request, Course $course)
+{
+    $request->validate([
+        'title' => 'required',
+        'task' => 'required',
+        'duedate' => 'required|date',
+        'assignment_file' => 'file|max:5000'
+    ]);
 
-        // Create a new assignment using the validated data
-        $assignment = Assignment::create($validatedData);
+    $data = $request->only(['title', 'task', 'duedate']);
 
-        // Redirect to the assignment's show page and pass the assignment ID
-        return redirect()->route('assignments.show', ['id' => $assignment->id]);
+    if ($request->hasFile('assignment_file')) {
+        $path = $request->file('assignment_file')->store('assignments');
+        $data['file_path'] = $path;
     }
 
-    public function show(string $id)
-    {
-        $assignment = Assignment::findOrFail($id);
-        $course = $assignment->course; // Assuming there is a relationship between Assignment and Course models
+    $assignment = new Assignment($data);
+    $course->assignments()->save($assignment);
 
-        return view('assignments.show', compact('assignment', 'course'));
-    }
+    return redirect()->route('assignments.index', ['course' => $course]);
+}
+
+public function show(Assignment $assignment)
+{
+    $course = $assignment->course;
+
+    return view('assignments', compact('assignment', 'course'));
+}
+
+
+
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        // Find the assignment by its ID
-        $assignment = Assignment::findOrFail($id);
+    public function edit($id)
+{
+    $assignment = Assignment::findOrFail($id);
 
-        // Show the form for editing the assignment
-        return view('assignments.edit', compact('assignment'));
+    return view('edit', compact('assignment'));
+}
+
+public function update(Request $request, $id)
+{
+    $assignment = Assignment::findOrFail($id);
+
+    $request->validate([
+        'title' => 'required|min:3|max:50',
+        'task' => 'required|min:5|max:255',
+        'duedate' => 'required|date',
+        'assignment_file' => 'file|max:5000'
+    ]);
+
+    $data = $request->only(['title', 'task', 'duedate']);
+
+    if ($request->hasFile('assignment_file')) {
+        $path = $request->file('assignment_file')->store('assignments');
+        $data['file_path'] = $path;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // Find the assignment by its ID
-        $assignment = Assignment::findOrFail($id);
+    $assignment->update($data);
 
-        // Validate the request data
-        $validatedData = $request->validate([
-            'task' => 'required',
-            'duedate' => 'required',
-        ]);
+    return redirect()->route('assignments.show', ['assignment' => $assignment->id]);
+}
 
-        // Update the assignment using the validated data
-        $assignment->update($validatedData);
 
-        // Redirect to the assignment's show page
-        return redirect()->route('assignments.show', $assignment->id);
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        // Find the assignment by its ID
-        $assignment = Assignment::findOrFail($id);
+public function destroy($id)
+{
+    $assignment = Assignment::findOrFail($id);
+    $course_id = $assignment->course->id; // assuming there is a relationship defined
+    $assignment->delete();
 
-        // Delete the assignment
-        $assignment->delete();
+    return redirect()->route('assignments.index', ['course' => $course_id]);
+}
 
-        // Redirect to the assignments index page
-        return redirect()->route('assignments.index');
-    }
+
 
     public function submit(Assignment $assignment, Request $request)
     {
@@ -128,5 +130,16 @@ class AssignmentController extends Controller
 
         return redirect()->back()->with('error', 'Submission failed. Please try again.');
     }
-
+    public function download($id)
+    {
+        $assignment = Assignment::findOrFail($id);
+    
+        // Make sure an assignment file exists
+        if ($assignment->file_path) {
+            return response()->download(storage_path('app/' . $assignment->file_path));
+        } else {
+            return redirect()->back()->with('error', 'File not found.');
+        }
+    }
+    
 }

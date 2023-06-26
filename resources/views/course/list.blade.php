@@ -1,3 +1,4 @@
+<!-- course.list.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -16,7 +17,7 @@
                         <p><strong>Lecturer:</strong> {{ optional($course->lecturer)->name }}</p>
 
                         <div class="mt-4">
-                            <a href="{{ route('course.show', ['id' => $course->id]) }}">Show</a>
+                            <a href="{{ route('course.show', ['course' => $course]) }}">Show</a>
                             @can('is-admin')
                                 <form action="{{ route('course.destroy', $course->id) }}" method="POST">
                                     @csrf
@@ -24,20 +25,23 @@
                                     <button type="submit" class="ml-4">Delete</button>
                                 </form>
                             @endcan
-                            @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+        
 
                             @auth
-                                @if (!auth()->user()->enrolledCourses->contains($course))
-                                    <form action="{{ route('course.enroll', ['course' => $course->id]) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="ml-4">Enroll</button>
-                                    </form>
-                                @endif
-                            @endauth
+    @if (!auth()->user()->enrolledCourses->contains($course))
+        <form action="{{ route('course.enroll', ['course' => $course->id]) }}" method="POST">
+            @csrf
+            <button type="submit" class="ml-4">Enroll</button>
+        </form>
+    @else
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+    @endif
+@endauth
+
                         </div>
                     </div>
                 </div>

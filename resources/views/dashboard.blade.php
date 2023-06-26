@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
     <div class="p-6 text-white">
-<p>Home page with info.............</p>
+<p>Home page with info.............</>
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

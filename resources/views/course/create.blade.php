@@ -36,7 +36,7 @@
                                 </select>
                             </div>
                             <div>
-                                @error('lecturer')
+                                @error('lecturer_id')
                                 <div class="alert">{{ $message }}</div>
                                 @enderror
                                 <label for="lecturer_id">Lecturer</label>

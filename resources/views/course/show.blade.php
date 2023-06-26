@@ -26,8 +26,7 @@
                     @can('is-admin')
                     <a href="{{ route('course.edit', ['id' => $course->id]) }}">Edit</a>
                    @endcan
-                    <a href="{{ route('assignments.index', ['id' => $course->id]) }}"> Assignments</a>
-
+                
 
 
 

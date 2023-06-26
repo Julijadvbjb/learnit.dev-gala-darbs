@@ -24,7 +24,7 @@ class LecturerController extends Controller
     }
     public function create()
     {
-        return view('lecturers.create');
+        return view('lecturercreate');
     }
     public function show($id)
     {
@@ -40,7 +40,23 @@ class LecturerController extends Controller
         return view('lecturers.show', compact('lecturer'));
     }
             
-    
+    public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|min:2|max:40',
+        'education' => 'required|min:5|max:80',
+        'description' => 'required|min:5|max:200',
+    ]);
+
+    $lecturer = new Lecturer;
+    $lecturer->name = $request->name;
+    $lecturer->education = $request->education;
+    $lecturer->description = $request->description;
+    $lecturer->save();
+
+    return redirect()->route('lecturers.index');
+}
+
 }
 
 

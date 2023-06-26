@@ -33,6 +33,7 @@ public function assignments()
     return $this->hasMany(Assignment::class);
 }
 
+
     public function category()
 {
     return $this->belongsTo(Category::class);

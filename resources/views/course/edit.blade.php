@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ isset($course) ? route('course.update', $course) : route('course.store') }}">
+                <form method="POST" action="{{ isset($course) ? route('course.update', ['id' => $course->id]) : route('course.store') }}">
                         @csrf
                         @if (isset($course))
                             @method('PUT')
@@ -37,7 +37,11 @@
                                     @endforeach
                                 </select>
                             </div>
+                            @error('lecturer_id')
+                                <div class="alert">{{ $message }}</div>
+                                @enderror
                             <label for="lecturer_id">Lecturer</label>
+                            
                                 <select name="lecturer_id" id="lecturer_id">
                                   <option value="">Pick a lecturer</option>
                                      @foreach ($lecturers as $lecturer)

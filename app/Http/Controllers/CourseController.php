@@ -31,30 +31,32 @@ class CourseController extends Controller
     /**
      * Show the details of a specific course identified by ID.
      */
-    public function show(int $id): View
-    {
-        $course = Course::findOrFail($id);
-        $assignments = $course->assignments; // Retrieve the assignments for the course
+    public function show(Course $course): View
+{
+    $assignments = $course->assignments; // Retrieve the assignments for the course
+
+    return view('course.show', compact('course', 'assignments'));
+}
+
     
-        return view('course.show', compact('course', 'assignments'));
-    }
+    public function create()
+{
+    $categories = Category::all();
+    $lecturers = Lecturer::all();
+    $course = new Course(); // Create a new Course instance
     
-     public function create()
-     {
-         $categories = Category::all();
-         $lecturers = Lecturer::all();
-         $course = null; 
-         return view('course.create', compact('categories', 'course', 'lecturers'));
-     }
+    return view('course.create', compact('categories', 'course', 'lecturers'));
+}
+
      
     
      public function store(Request $request)
 {
     $request->validate([
-        'name' => 'required',
+        'name' => 'required|min:3|max:100',
         'category' => 'required|exists:categories,id',
         'lecturer_id' => 'required|exists:lecturers,id',  // validate lecturer_id
-        'description' => 'required',
+        'description' => 'required|min:3|max:255',
     ]);
 
     Course::create([
@@ -64,15 +66,10 @@ class CourseController extends Controller
         'description' => $request->description,
     ]);
 
-    return redirect()->route('course.index')->with('success', 'Course created successfully!');
+    return redirect()->route('course.index');
 }
 
-public function showEnrolledCourses()
-{
-    $enrolledCourses = auth()->user()->enrolledCourses;
-    return view('mycourses.show', compact('enrolledCourses'));
-}
- 
+     
     
     /**
      * Show the form for editing a specific course identified by ID.
@@ -87,15 +84,7 @@ public function showEnrolledCourses()
         return view('course.edit', compact('course', 'categories', 'lecturers', 'lecturer'));  // Pass the lecturer into the view
     }
     
-    public function myCourse(int $id): View
-    {
-        $course = Course::findOrFail($id);
-        $assignments = $course->assignments;
-        // Add any other necessary data retrieval or processing here
-    
-        return view('course.mycourse', compact('course', 'assignments'));
-    }
-    
+
     /**
      * Update the specified course in storage.
      */
@@ -103,10 +92,10 @@ public function showEnrolledCourses()
     {
         $course = Course::findOrFail($id);
         $validatedData = $request->validate([
-            'name' => 'required|min:3|max:255',
+            'name' => 'required|min:3|max:100',
             'category_id' => 'required|exists:categories,id',
             'lecturer_id' => 'required|exists:categories,id',
-            'description' =>'required|min:3|max:200',
+            'description' =>'required|min:3|max:255',
         ]);
         
         $course->name = $validatedData['name'];
@@ -118,7 +107,7 @@ public function showEnrolledCourses()
         $course->category()->associate($validatedData['category_id']);
         $course->save();
         
-        return redirect()->route('course.show', ['id' => $course->id])->with('success_message', 'Course was updated successfully!');
+        return redirect()->route('course.show', ['id' => $course->id]);
     }   
 
     /**
@@ -152,5 +141,27 @@ public function showEnrolledCourses()
         return redirect()->back()->with('success', 'You have successfully enrolled in the course.');
     }
     
+  /**
+ * Show the courses the authenticated user is enrolled in.
+ */
+public function showEnrolledCourses(): View
+{
+    // Get the currently authenticated user
+    $user = auth()->user();
+
+    // Fetch the courses the user is enrolled in
+    $courses = $user->enrolledCourses;
+
+    // Return a view with the courses data
+    return view('mycourses.show', compact('courses'));
+}
+public function myCourse(int $id): View
+{
+    // Fetch the course by its ID
+    $course = Course::findOrFail($id);
+
+    // Return a view, passing in the course
+    return view('course.mycourse', compact('course'));
+}
 
 }
