@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Assignment;
 use App\Models\Course;
+use App\Models\Category;
+
 use App\Http\Controllers\ModelNotFoundException;
 use App\Http\Controllers\Session;
 use App\Models\User;
@@ -17,15 +19,12 @@ class AssignmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Course $course)
+    public function index()
     {
-        $assignments = $course->assignments;
-        return view('assignments', compact('assignments', 'course'));
+        $assignments = Assignment::all();
+        $categories = Category::all();
+        return view('assignments', compact('assignments', 'categories'));
     }
-    
-    
-    
-    
 
     public function create(Course $course)
     {
@@ -61,12 +60,6 @@ public function show(Assignment $assignment)
     return view('assignments', compact('assignment', 'course'));
 }
 
-
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
 {
     $assignment = Assignment::findOrFail($id);
@@ -96,9 +89,6 @@ public function update(Request $request, $id)
 
     return redirect()->route('assignments.show', ['assignment' => $assignment->id]);
 }
-
-
-
 public function destroy($id)
 {
     $assignment = Assignment::findOrFail($id);
@@ -107,9 +97,6 @@ public function destroy($id)
 
     return redirect()->route('assignments.index', ['course' => $course_id]);
 }
-
-
-
     public function submit(Assignment $assignment, Request $request)
     {
         $validatedData = $request->validate([

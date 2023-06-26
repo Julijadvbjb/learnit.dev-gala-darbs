@@ -19,6 +19,10 @@
                     <x-nav-link :href="route('mycourses.show')" :active="request()->routeIs('mycourses.show')" >
                         {{ __('My courses') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('myassignments')" :active="request()->routeIs('myassignments')">
+                    {{ __('My assignments') }}
+
+                    </x-nav-link>
 
                     @can('is-admin')
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">

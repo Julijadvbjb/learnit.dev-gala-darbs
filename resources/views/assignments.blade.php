@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <a href="{{ route('course.mycourse', ['id' => $course->id]) }}" class="text-white">Back to Course</a>
 
-        <h2 class="mb-4 font-bold text-white" >{{$course->name}} : current assignments</h2><br>
+        <h2 class="mb-4 font-bold text-white" >{{$course->name}} :Current assignments</h2><br>
         
         @if ($assignments->count() > 0)
             @foreach ($assignments as $assignment)

@@ -46,10 +46,10 @@ class User extends Authenticatable
     ];
 
     // The courses that the user has created (as a teacher)
-    public function courses()
-    {
-        return $this->hasMany(Course::class, 'user_id');
+    public function courses() {
+        return $this->belongsToMany(Course::class);
     }
+    
 
     // The courses that the user is enrolled in (as a student)
 

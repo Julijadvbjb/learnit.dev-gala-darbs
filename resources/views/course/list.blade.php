@@ -5,6 +5,18 @@
             {{ __('List of courses') }}
         </h2>
     </x-slot>
+<!-- Add this above your course list -->
+<form action="{{ route('course.index') }}" method="GET">
+    @foreach($categories as $category)
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="{{ $category->id }}" id="category-{{ $category->id }}" name="categories[]" @if(in_array($category->id, $selectedCategories)) checked @endif>
+            <label class="form-check-label" for="category-{{ $category->id }}">
+                {{ $category->name }}
+            </label>
+        </div>
+    @endforeach
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

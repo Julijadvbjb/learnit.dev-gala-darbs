@@ -13,9 +13,7 @@
                     <div class="p-6 text-gray-900">
                         <h3 class="font-semibold text-lg">{{ $user->name }}</h3>
                         <p><strong>Email:</strong> {{ $user->email }}</p>
-
-
-                        </div>
+                        <p><strong>Registered At:</strong> {{ $user->created_at->format('d-m-Y H:i:s') }}</p>
                     </div>
                 </div>
             @endforeach

@@ -10,6 +10,10 @@ use App\Models\Assignment;
 use App\Models\Lecturer;
 use App\Models\User;
 use App\Models\Enrollment;
+use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\Auth\RegisteredUserController;
+
 
 
 use Illuminate\Support\Facades\DB;
@@ -22,12 +26,25 @@ class CourseController extends Controller
      * Display a listing of the courses.
      */
     public function index()
-    {
-        $courses = Course::all();
+{
+    $categories = Category::all();
+    $selectedCategories = request()->get('categories') ?? [];
 
-        return view('course.list', compact('courses'));
-    }
+    $courses = Course::when($selectedCategories, function($query) use ($selectedCategories) {
+        $query->whereIn('category_id', $selectedCategories);
+    })->get();
 
+    return view('course.list', compact('categories', 'courses', 'selectedCategories'));
+}
+
+    
+public function filter(Request $request)
+{
+    $selectedCategories = $request->input('categories');
+    $courses = Course::whereIn('category_id', $selectedCategories)->get();
+
+    return view('course.filtered-list', compact('courses'));
+}
     /**
      * Show the details of a specific course identified by ID.
      */
@@ -162,6 +179,18 @@ public function myCourse(int $id): View
 
     // Return a view, passing in the course
     return view('course.mycourse', compact('course'));
-}
+}public function myAssignments()
+{
+    $user = Auth::user();  // Get the authenticated user
 
+    $courses = $user->enrolledCourses;  // Assuming a many-to-many relationship here
+
+    $assignments = collect();
+
+    foreach ($courses as $course) {
+        $assignments = $assignments->concat($course->assignments); // Again, assuming a relationship from courses to assignments
+    }
+
+    return view('myassignments', ['assignments' => $assignments]);
+}
 }

@@ -23,12 +23,12 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+    Route::post('/register', [RegisteredUserController::class, 'store'])->middleware(['guest']);
 
     Route::middleware(['auth'])->group(function () {
         // Enroll in a course
         Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
 
-    
     #lecturers
     Route::get('/lecturers', 'App\Http\Controllers\LecturerController@index')->name('lecturer.index');
     Route::get('/lecturers/create', [App\Http\Controllers\LecturerController::class, 'create'])->name('lecturer.create');
@@ -51,7 +51,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/courses/{id}', [CourseController::class, 'update'])->name('course.update');
     Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
     Route::get('/courses/{course}', 'App\Http\Controllers\CourseController@show')->name('course.show');
-   
+
+   # filter
+   Route::post('/course/filter', [CourseController::class, 'filter'])->name('course.filter');
+
     # Assignment routes
     Route::get('/courses/{course}/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
     Route::get('/courses/{course}/assignments/create', [AssignmentController::class, 'create'])->name('assignments.create');
@@ -64,6 +67,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/assignments/{id}', [AssignmentController::class, 'destroy'])->name('assignments.destroy');
     Route::post('/assignments/{assignment}/submit', [AssignmentController::class, 'submit'])->name('assignments.submit');
     Route::get('/assignments/{id}/download', [AssignmentController::class, 'download'])->name('assignments.download');
+    // ... 
+Route::get('/myassignments', [CourseController::class, 'myAssignments'])->name('myassignments');
+
 });
     Route::middleware(['auth'])->group(function () {
         // Enroll in a course
