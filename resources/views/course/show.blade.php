@@ -13,23 +13,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <a href="{{ route('course.index') }}">Back</a>
-                    <h2 class="mb-4 font-bold">Details</h2>
-                    <h3 class="pt-2 pb-1 text-bold">Name</h3>
+                    <a href="{{ route('course.index') }}">{{ __('messages.Back') }}</a>
+                    <h2 class="mb-4 font-bold">{{ __('messages.Details') }}</h2>
+                    <h3 class="pt-2 pb-1 text-bold">{{ __('messages.Title') }}</h3>
                     <p>{{ $course->name }}</p>
-                    <h3 class="pt-2 pb-1 text-bold">Category</h3>
-                    <p>{{ $course->category->name }}</p>
+                    <h3 class="pt-2 pb-1 text-bold">{{ __('messages.Category') }}</h3>
+                    <p>{{ optional($course->category)->name ?? 'No Category' }}</p>
                     <h3 class="pt-2 pb-1 text-bold">Lecturer</h3>
-                    <p>{{ $course->lecturer->name }}</p>
-                    <h3 class="pt-2 pb-1 text-bold">Description</h3>
+                    <p>{{ optional($course->lecturer)->name ?? 'No Lecturer' }}</p>
+                    <h3 class="pt-2 pb-1 text-bold">{{ __('messages.Description') }}</h3>
                     <p>{{ $course->description }}</p><br>
                     @can('is-admin')
-                    <a href="{{ route('course.edit', ['id' => $course->id]) }}">Edit</a>
+                    <a href="{{ route('course.edit', $course) }}">{{ __('messages.Edit') }}</a>
                    @endcan
-                
-
-
-
                 </div>
             </div>
         </div>

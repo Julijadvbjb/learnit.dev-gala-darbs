@@ -11,9 +11,9 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                     <div class="p-6 text-gray-900">
                         <h3 class="font-semibold text-lg">{{ $assignment->title }}</h3>
-                        <p><strong>Course:</strong> {{ $assignment->course->name }}</p>
-                        <p><strong>Task:</strong> {{ $assignment->task }}</p>
-                        <p><strong>Deadline:</strong> {{ $assignment->duedate }}</p>
+                        <p><strong>{{ __('messages.Course')}}</strong> {{ $assignment->course->name }}</p>
+                        <p><strong>{{ __('messages.Task')}}</strong> {{ $assignment->task }}</p>
+                        <p><strong>{{ __('messages.Deadline')}}</strong> {{ $assignment->duedate }}</p>
                     </div>
                 </div>
             @endforeach

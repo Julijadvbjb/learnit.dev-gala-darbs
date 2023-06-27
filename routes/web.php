@@ -4,6 +4,10 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\UserController;
+
 
 
 Route::middleware(['auth'])->group(function () {
@@ -24,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
     Route::post('/register', [RegisteredUserController::class, 'store'])->middleware(['guest']);
+#activitylog
+Route::get('/activities', [ActivityController::class, 'showActivities']);
 
     Route::middleware(['auth'])->group(function () {
         // Enroll in a course
@@ -40,23 +46,25 @@ Route::middleware(['auth'])->group(function () {
 
     #users
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+    Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
+  #language
+  Route::get('/switch-lang/{lang}', [LanguageController::class, 'switchLang'])->name('switchLang');
 
     # Course routes
     Route::get('/courses', [CourseController::class, 'index'])->name('course.index');
     Route::get('/courses/create', [CourseController::class, 'create'])->name('course.create');
     Route::post('/courses', [CourseController::class, 'store'])->name('course.store');
-    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('course.show');
-    Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('course.edit');
-    Route::put('/courses/{id}', [CourseController::class, 'update'])->name('course.update');
-    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('course.destroy');
-    Route::get('/courses/{course}', 'App\Http\Controllers\CourseController@show')->name('course.show');
+    Route::get('/courses/{course}', [CourseController::class, 'show'])->name('course.show');
+    Route::get('/courses/{course}/edit', [CourseController::class, 'edit'])->name('course.edit');
+    Route::put('/courses/{course}', [CourseController::class, 'update'])->name('course.update');
+    Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->name('course.destroy');
 
    # filter
    Route::post('/course/filter', [CourseController::class, 'filter'])->name('course.filter');
 
     # Assignment routes
-    Route::get('/courses/{course}/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
+    Route::get('courses/{course}/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
     Route::get('/courses/{course}/assignments/create', [AssignmentController::class, 'create'])->name('assignments.create');
     Route::post('/courses/{course}/assignments', [AssignmentController::class, 'store'])->name('assignments.store');
     Route::get('/assignments', [AssignmentController::class, 'index'])->name('assignments');
@@ -75,8 +83,8 @@ Route::get('/myassignments', [CourseController::class, 'myAssignments'])->name('
         // Enroll in a course
         Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
         Route::get('/mycourses', [CourseController::class, 'showEnrolledCourses'])->name('mycourses.show');
-        Route::get('/course/{id}/mycourse', [CourseController::class, 'myCourse'])->name('course.mycourse');
-        
+        Route::get('/course/{course}/mycourse', [CourseController::class, 'myCourse'])->name('course.mycourse');
+        Route::post('/courses/{course}/leave', [CourseController::class, 'leaveCourse'])->name('courses.leave');
 
     });
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
@@ -84,3 +92,11 @@ Route::get('/myassignments', [CourseController::class, 'myAssignments'])->name('
 });
 
 require __DIR__.'/auth.php';
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

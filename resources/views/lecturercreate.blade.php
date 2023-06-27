@@ -9,28 +9,26 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <a href="{{ route('lecturers.index') }}">Back</a><br><br>
-                   {{ __('Adding new lecturer ') }} 
+                    <a href="{{ route('lecturers.index') }}">  {{__('messages.Back') }} </a><br><br>
+                    <div class="font-bold">{{__('messages.Adding new lecturer') }} </div><br>
                    <form method="POST" action="{{ route('lecturer.store') }}">
     @csrf
-    <!-- rest of your form fields -->
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-    <label for="name">Name</label><br>
-    <input type="text" name="name" id="name" required><br>
-    <label for="education">Education</label><br>
-    <textarea name="education" id="education" required></textarea><br>
-    <label for="description">Description</label><br>
-    <input type="text" name="description" id="description" required><br>
-    <button type="submit">Save</button>
+    @error('name')
+        <div class="alert">{{ $message }}</div>
+    @enderror
+    <label for="name">{{ __('messages.Name')}}</label><br>
+    <input type="text" name="name" id="name" value="{{ old('name') }}" required><br>
+    @error('education')
+        <div class="alert">{{ $message }}</div>
+    @enderror
+    <label for="education">{{ __('messages.Education')}}</label><br>
+    <input type="text" name="education" id="education"  value="{{ old('education') }}"required><br>
+    @error('description')
+        <div class="alert">{{ $message }}</div>
+    @enderror
+    <label for="description">{{ __('messages.Description')}}</label><br>
+    <input type="text" name="description" id="description" value="{{ old('description') }}" required><br><br>
+    <x-primary-button type="submit">{{ __('messages.Save')}}</x-primary-button>
 </form>
 
                 </div>

@@ -11,14 +11,14 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                     <div class="p-6 text-gray-900">
                         <h3 class="font-semibold text-lg">{{ $lecturer->name }}</h3>
-                        <p><strong>Education:</strong> {{ $lecturer->education }}</p>
-                        <p><strong>Description:</strong> {{ $lecturer->description }}</p>
-                        <p><strong>Courses Taught:</strong></p>
+                        <p><strong>{{ __('messages.Education')}}</strong> {{ $lecturer->education }}</p>
+                        <p><strong>{{ __('messages.Description')}}</strong> {{ $lecturer->description }}</p>
+                        <p><strong>{{ __('messages.Courses Taught')}}</strong></p>
                         <ul>
                             @forelse($lecturer->courses as $course)
                                 <li>{{ $course->name }}</li>
                             @empty
-                                <li>No courses at the moment</li>
+                                <li>{{ __('messages.No courses at the moment')}}</li>
                             @endforelse
                         </ul>
                         @can('is-admin')
@@ -27,7 +27,7 @@
                                     <form action="{{ route('lecturer.destroy', $lecturer->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this lecturer?')">Delete</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this lecturer?')">{{ __('messages.Delete')}}</button>
                                     </form>
                                 @endcan
                             </div>
@@ -37,7 +37,10 @@
             @endforeach
             @can('is-admin')
                 <div class="p-6 text-white">
-                    <p><a href="{{ route('lecturer.create') }}">Add new lecturer</a></p>
+                <a href="{{ route('lecturer.create') }}">
+    <x-primary-button>{{ __('messages.Add new lecturer') }}</x-primary-button>
+</a>
+
                 </div>
             @endcan
         </div>

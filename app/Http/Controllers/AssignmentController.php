@@ -19,12 +19,13 @@ class AssignmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $assignments = Assignment::all();
-        $categories = Category::all();
-        return view('assignments', compact('assignments', 'categories'));
-    }
+    public function index(Course $course)
+{
+    $assignments = $course->assignments;  // Get assignments related to the specific course
+    $categories = Category::all();
+    return view('assignments', compact('assignments', 'categories', 'course')); // Don't forget to pass the $course to the view
+}
+
 
     public function create(Course $course)
     {
@@ -34,9 +35,9 @@ class AssignmentController extends Controller
 public function store(Request $request, Course $course)
 {
     $request->validate([
-        'title' => 'required',
-        'task' => 'required',
-        'duedate' => 'required|date',
+        'title' => 'required|min:3|max:50',
+        'task' => 'required|min:5|max:255',
+        'duedate' => 'required|date|after_or_equal:today',
         'assignment_file' => 'file|max:5000'
     ]);
 
@@ -55,10 +56,11 @@ public function store(Request $request, Course $course)
 
 public function show(Assignment $assignment)
 {
-    $course = $assignment->course;
+    $course = $course = $assignment->course; // Get the course that the assignment belongs to
 
-    return view('assignments', compact('assignment', 'course'));
+    return view('assignments.show', compact('assignment', 'course')); // Pass the course to the view
 }
+
 
     public function edit($id)
 {
@@ -74,7 +76,7 @@ public function update(Request $request, $id)
     $request->validate([
         'title' => 'required|min:3|max:50',
         'task' => 'required|min:5|max:255',
-        'duedate' => 'required|date',
+        'duedate' => 'required|date|after_or_equal:today',
         'assignment_file' => 'file|max:5000'
     ]);
 

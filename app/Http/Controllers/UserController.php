@@ -18,13 +18,14 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    // Retrieve all users
-    $users = User::all();
-
-    // Return the users to a view
-    return view('users', compact('users'));
-}
+    {
+        // Retrieve all users in descending order by created_at date
+        $users = User::orderBy('created_at', 'desc')->get();
+    
+        // Return the users to a view
+        return view('users', compact('users'));
+    }
+    
 
 
     /**
@@ -131,15 +132,19 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        // Find the user by ID
-        $user = User::findOrFail($id);
+    public function destroy($id)
+{
+    $user = User::find($id);
 
-        // Delete the user from the database
-        $user->delete();
-
-        // Redirect or return a response as needed
-        // Example: return redirect()->route('users.index')->with('success', 'User deleted successfully');
+    // Check if user is found
+    if (!$user) {
+        return redirect()->route('users.index')->with('error', 'User not found');
     }
+
+    // Delete the user
+    $user->delete();
+
+    // Redirect to the users page with success message
+    return redirect()->route('users.index')->with('success', 'User deleted successfully');
+}
 }

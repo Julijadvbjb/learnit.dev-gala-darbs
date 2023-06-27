@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                 <form action="{{ route('assignments.update', ['id' => $assignment->id]) }}" method="POST" enctype="multipart/form-data">
     @method('PUT')
-                    {{$assignment->title}}{{ __(': editing a new assignment ') }} <br><br>
+                    {{$assignment->title}}:{{ __(' messages.editing a new assignment ') }} <br><br>
                         @csrf
                         @if ($errors->any())
     <div class="alert alert-danger">
@@ -23,25 +23,25 @@
     </div>
 @endif
 <div class="mb-4">
-<label for="title" class="text-bold">Title</label><br>
+<label for="title" class="text-bold">{{ __(' messages.Title')}}</label><br>
 <input type="text" name="title" id="title" value="{{ old('title', $assignment->title) }}" required>
 </div>
 <div class="mb-4">
-<label for="task" class="text-bold">Task</label><br>
+<label for="task" class="text-bold">{{ __(' messages.Task')}}</label><br>
 <textarea name="task" id="task" required>{{ old('task', $assignment->task) }}</textarea><br>
 </div>
 <div class="mb-4">
-<label for="duedate" class="text-bold">Due Date</label><br>
+<label for="duedate" class="text-bold">{{ __(' messages.DueDate')}}</label><br>
 <input type="date" name="duedate" id="duedate" value="{{ old('duedate', $assignment->duedate) }}" required><br>
 </div>
 <div class="mb-4">
-<label for="assignment_file">File</label><br>
+<label for="assignment_file">{{ __(' messages.File')}}</label><br>
 @if($assignment->file)
-  <p>Previously uploaded file: {{ $assignment->file }}</p>
+  <p>{{ __(' messages.Previously uploaded file')}}: {{ $assignment->file }}</p>
 @endif
 <input type="file" name="assignment_file" id="assignment_file" accept=".pdf,.doc,.docx"><br>
 </div>
-                        <button type="submit">Save</button>
+                        <button type="submit">{{ __(' messages.Save')}}</button>
                     </form>
                 </div>
             </div>

@@ -2,29 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Spatie\Activitylog\Contracts\Activity;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Models\Category;
-use App\Models\Assignment;
 use App\Models\Lecturer;
-use App\Models\User;
-use App\Models\Enrollment;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Assignment;
+use Illuminate\Http\RedirectResponse;
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 
-
-
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Mail;
-
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the courses.
-     */
     public function index()
 {
     $categories = Category::all();
@@ -36,7 +27,6 @@ class CourseController extends Controller
 
     return view('course.list', compact('categories', 'courses', 'selectedCategories'));
 }
-
     
 public function filter(Request $request)
 {
@@ -45,17 +35,16 @@ public function filter(Request $request)
 
     return view('course.filtered-list', compact('courses'));
 }
-    /**
-     * Show the details of a specific course identified by ID.
-     */
-    public function show(Course $course): View
-{
-    $assignments = $course->assignments; // Retrieve the assignments for the course
 
-    return view('course.show', compact('course', 'assignments'));
+public function show(Course $course): View
+{
+    $course->load(['lecturer', 'category']);  // Eager load relationships
+
+    $assignments = $course->assignments;
+    return view('course.show', ['course' => $course, 'assignments' => $assignments]);
 }
 
-    
+ 
     public function create()
 {
     $categories = Category::all();
@@ -64,9 +53,7 @@ public function filter(Request $request)
     
     return view('course.create', compact('categories', 'course', 'lecturers'));
 }
-
-     
-    
+   
      public function store(Request $request)
 {
     $request->validate([
@@ -86,111 +73,117 @@ public function filter(Request $request)
     return redirect()->route('course.index');
 }
 
-     
-    
-    /**
-     * Show the form for editing a specific course identified by ID.
-     */
-    public function edit(int $id): View
+    public function edit(int $course): View
     {
-        $course = Course::findOrFail($id);
+        $course = Course::findOrFail($course);
         $categories = Category::orderBy('name')->get();
         $lecturers = Lecturer::orderBy('name')->get();
         $lecturer = $course->lecturer;  // Fetch the lecturer of the course
     
         return view('course.edit', compact('course', 'categories', 'lecturers', 'lecturer'));  // Pass the lecturer into the view
-    }
+    } 
+
     
+    public function update(Request $request, Course $course)
+{
+    $validatedData = $request->validate([
+        'name' => 'required|min:3|max:100',
+        'category_id' => 'required|exists:categories,id',
+        'lecturer_id' => 'required|exists:categories,id',
+        'description' =>'required|min:3|max:255',
+    ]);
+    
+    $course->name = $validatedData['name'];
+    $course->lecturer_id = $validatedData['lecturer_id'];
+    $course->description = $validatedData['description'];
 
-    /**
-     * Update the specified course in storage.
-     */
-    public function update(Request $request, int $id)
-    {
-        $course = Course::findOrFail($id);
-        $validatedData = $request->validate([
-            'name' => 'required|min:3|max:100',
-            'category_id' => 'required|exists:categories,id',
-            'lecturer_id' => 'required|exists:categories,id',
-            'description' =>'required|min:3|max:255',
-        ]);
-        
-        $course->name = $validatedData['name'];
-        $course->lecturer_id = $validatedData['lecturer_id'];
-        $course->save();
+    $course->category()->associate($validatedData['category_id']);
+    $course->save();
+    
+    return redirect()->route('course.show', $course);
+}   
+public function getRouteKeyName()
+{
+    return 'id';
+}
 
-        $course->description = $validatedData['description'];
-
-        $course->category()->associate($validatedData['category_id']);
-        $course->save();
-        
-        return redirect()->route('course.show', ['id' => $course->id]);
-    }   
-
-    /**
-     * Show all courses.
-     */
+   
     public function showAll(): View
     {
         $courses = Course::orderBy('name')->get();
 
         return view('course.list', compact('courses'));
     }
-
-    /**
-     * Remove the specified course from storage.
-     */
-    public function destroy($id)
+    public function destroy($course)
     {
         // Find the course by its ID
-        $course = Course::findOrFail($id);
+        $course = Course::findOrFail($course);
 
         // Delete the course
         $course->delete();
 
         // Redirect to a success page or the course list
-        return redirect()->route('course.index')->with('success', 'Course deleted successfully!');
+        return redirect()->route('course.index');
     }
     public function enroll(Course $course)
     {
-        auth()->user()->enrolledCourses()->syncWithoutDetaching([$course->id]);
+        $user = auth()->user();
+        $user->enrolledCourses()->syncWithoutDetaching([$course->id]);
+    
+        // Log the activity
+        activity()
+            ->causedBy($user)
+            ->performedOn($course)
+            ->withProperties(['ip' => request()->getClientIp(), 'user_agent' => request()->userAgent()])
+            ->log($user->name . ' enrolled in ' . $course->name);
     
         return redirect()->back()->with('success', 'You have successfully enrolled in the course.');
     }
-    
-  /**
- * Show the courses the authenticated user is enrolled in.
- */
 public function showEnrolledCourses(): View
 {
-    // Get the currently authenticated user
     $user = auth()->user();
 
-    // Fetch the courses the user is enrolled in
     $courses = $user->enrolledCourses;
 
-    // Return a view with the courses data
     return view('mycourses.show', compact('courses'));
 }
-public function myCourse(int $id): View
+public function myCourse(int $course): View
 {
-    // Fetch the course by its ID
-    $course = Course::findOrFail($id);
+    $course = Course::findOrFail($course);
 
-    // Return a view, passing in the course
     return view('course.mycourse', compact('course'));
-}public function myAssignments()
+}
+public function myAssignments()
 {
-    $user = Auth::user();  // Get the authenticated user
-
-    $courses = $user->enrolledCourses;  // Assuming a many-to-many relationship here
-
+    $user = Auth::user(); 
+    $courses = $user->enrolledCourses; 
     $assignments = collect();
 
+    // Assuming that each course has many assignments
     foreach ($courses as $course) {
-        $assignments = $assignments->concat($course->assignments); // Again, assuming a relationship from courses to assignments
+        $assignments = $assignments->concat($course->assignments);
     }
 
-    return view('myassignments', ['assignments' => $assignments]);
+    // Return the first course for simplicity
+    $course = $courses->first();
+
+    return view('myassignments', ['assignments' => $assignments, 'course' => $course]);
 }
+public function leaveCourse(Course $course): RedirectResponse
+{
+    $user = auth()->user();
+    
+    // Detach the user from the course
+    $user->enrolledCourses()->detach($course->id);
+    
+    // Log the activity
+    activity()
+        ->causedBy($user)
+        ->performedOn($course)
+        ->withProperties(['ip' => request()->getClientIp(), 'user_agent' => request()->userAgent()])
+        ->log($user->name . ' left the course ' . $course->name);
+
+    return redirect()->route('mycourses.show')->with('success', 'You have successfully left the course.');
+}
+
 }

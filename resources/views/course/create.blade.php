@@ -17,16 +17,16 @@
                                 @error('name')
                                 <div class="alert">{{ $message }}</div>
                                 @enderror
-                                <label for="name">Name</label>
+                                <label for="name">{{ __('messages.please confirm') }}</label>
                                 <input type="text" name="name" id="name" value="{{ old('name') }}" />
                             </div>
                             <div>
                                 @error('category')
                                 <div class="alert">{{ $message }}</div>
                                 @enderror
-                                <label for="category">Category</label>
+                                <label for="category">{{ __('messages.Category') }}</label>
                                 <select name="category" id="category">
-                                    <option value="">Pick a category</option>
+                                    <option value="">{{ __('messages.Pick a category') }}</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
                                             {{ old('category') == $category->id ? 'selected' : '' }}>
@@ -39,9 +39,9 @@
                                 @error('lecturer_id')
                                 <div class="alert">{{ $message }}</div>
                                 @enderror
-                                <label for="lecturer_id">Lecturer</label>
+                                <label for="lecturer_id">{{ __('messages.Lecturer') }}</label>
 <select name="lecturer_id" id="lecturer_id">
-    <option value="">Pick a lecturer</option>
+    <option value="">{{ __('messages.Pick a lecturer') }}</option>
     @foreach ($lecturers as $lecturer)
         <option value="{{ $lecturer->id }}" {{ old('lecturer_id') == $lecturer->id ? 'selected' : '' }}>
             {{ $lecturer->name }}
@@ -54,11 +54,11 @@
                                 @error('description')
                                 <div class="alert">{{ $message }}</div>
                                 @enderror
-                                <label for="description">Description</label>
+                                <label for="description">{{ __('messages.Description') }}</label>
                                 <input id="description" name="description" type="text" value="{{ old('description') }}" />
                             </div>
 
-                            <button type="submit">Save</button>
+                            <button type="submit">{{ __('messages.Save') }}</button>
                         </fieldset>
                     </form>
                 </div>

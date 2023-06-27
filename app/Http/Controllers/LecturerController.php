@@ -43,7 +43,7 @@ class LecturerController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'name' => 'required|min:2|max:40',
+        'name' => 'required|min:3|max:40',
         'education' => 'required|min:5|max:80',
         'description' => 'required|min:5|max:200',
     ]);
