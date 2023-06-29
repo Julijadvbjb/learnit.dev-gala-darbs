@@ -94,7 +94,6 @@ return [
     'Duedate'=>'Termiņš',
     'Assignment File'=>'Uzdevuma fails',
     'Download Assignment File'=>'Lejuplādēt uzdevuma file',
-    'No assignments at the moment'=>'Šobrīd nav uzdevumu',
     'Add a new assignment'=>'Pievienot jaunu uzdevumu',
     ': create new assignment'=>': izveidot jaunu uzdevumu',
 #dashboard
@@ -121,6 +120,22 @@ return [
     'Deadline'=>'Termiņš',
     'Email'=>'E-pasts',
     'Registered At'=>'Reģistrēts',
+    'Delete User'=>'Dzēst lietotāju',
+    'Upload'=>'Augšuplādēt',
+    'Download'=>'Lejuplādēt',
+    'Info'=>'Info',
+    'With'=>'Ar mūsu platformu Jūs varat mācīties patstāvīgi.',
+    'Do assignments'=>'Pildi uzdevumus un iemācies vēl vairāk!',
+    'No assignments'=>'Šobrīd nav neviena uzdevuma!',
+    'Creating new Course'=>'Jauna kursa veidošana',
+    'List of lecturers'=>'Pasniedzēju saraksts',
+    'You are not enrolled'=>'Tu neesi reģistrējies nevienam kursam.',
+    'No assignments at'=>'Šobrīd nav neviena uzdevuma. Reģistrējies kursos!.',
+    'No assignments at the moment'=>'Šobrīd nav neviena uzdevuma!',
+    'All Registered Users'=>'Visi reģistrētie lietotāji',
+    'You have successfully enrolled in the course.'=>'Esat veiksmīgi reģistrējies kursam!',
+    'Creating new assignment'=>'Jauna uzdevuma veidošana',
+
 ];
 
 

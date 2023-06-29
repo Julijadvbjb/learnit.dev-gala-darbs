@@ -7,6 +7,8 @@ use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FileController;
+
 
 
 
@@ -34,6 +36,12 @@ Route::get('/activities', [ActivityController::class, 'showActivities']);
     Route::middleware(['auth'])->group(function () {
         // Enroll in a course
         Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
+#files
+Route::post('/courses/{course}/files/upload', [App\Http\Controllers\FileController::class, 'upload'])->name('files.upload');
+Route::get('/files/{id}/download', [App\Http\Controllers\FileController::class, 'download'])->name('files.download');
+Route::delete('/files/{id}/delete', [App\Http\Controllers\FileController::class, 'delete'])->name('files.delete');
+#submit
+Route::post('/assignments/{assignment}/submit', [AssignmentController::class, 'submit'])->name('assignments.submit');
 
     #lecturers
     Route::get('/lecturers', 'App\Http\Controllers\LecturerController@index')->name('lecturer.index');
@@ -81,7 +89,6 @@ Route::get('/myassignments', [CourseController::class, 'myAssignments'])->name('
 });
     Route::middleware(['auth'])->group(function () {
         // Enroll in a course
-        Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
         Route::get('/mycourses', [CourseController::class, 'showEnrolledCourses'])->name('mycourses.show');
         Route::get('/course/{course}/mycourse', [CourseController::class, 'myCourse'])->name('course.mycourse');
         Route::post('/courses/{course}/leave', [CourseController::class, 'leaveCourse'])->name('courses.leave');

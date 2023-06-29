@@ -6,6 +6,11 @@
     </x-slot>
 
     <div class="py-12">
+    <div class="text-center">
+            <h2 class="font-semibold text-2xl text-white leading-tight mb-6">
+            {{ __('messages.List of lecturers') }}
+            </h2>
+    </div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @foreach ($lecturers as $lecturer)
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
@@ -27,7 +32,7 @@
                                     <form action="{{ route('lecturer.destroy', $lecturer->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this lecturer?')">{{ __('messages.Delete')}}</button>
+                                        <x-primary-button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this lecturer?')">{{ __('messages.Delete')}}</x-primary-button>
                                     </form>
                                 @endcan
                             </div>
@@ -36,9 +41,9 @@
                 </div>
             @endforeach
             @can('is-admin')
-                <div class="p-6 text-white">
+                <div class="p-6 text-white ">
                 <a href="{{ route('lecturer.create') }}">
-    <x-primary-button>{{ __('messages.Add new lecturer') }}</x-primary-button>
+    <button class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{ __('messages.Add new lecturer') }}</button>
 </a>
 
                 </div>

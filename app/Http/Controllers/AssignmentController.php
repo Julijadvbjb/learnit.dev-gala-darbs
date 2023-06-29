@@ -37,11 +37,10 @@ public function store(Request $request, Course $course)
     $request->validate([
         'title' => 'required|min:3|max:50',
         'task' => 'required|min:5|max:255',
-        'duedate' => 'required|date|after_or_equal:today',
         'assignment_file' => 'file|max:5000'
     ]);
 
-    $data = $request->only(['title', 'task', 'duedate']);
+    $data = $request->only(['title', 'task']);
 
     if ($request->hasFile('assignment_file')) {
         $path = $request->file('assignment_file')->store('assignments');
@@ -76,11 +75,10 @@ public function update(Request $request, $id)
     $request->validate([
         'title' => 'required|min:3|max:50',
         'task' => 'required|min:5|max:255',
-        'duedate' => 'required|date|after_or_equal:today',
         'assignment_file' => 'file|max:5000'
     ]);
 
-    $data = $request->only(['title', 'task', 'duedate']);
+    $data = $request->only(['title', 'task']);
 
     if ($request->hasFile('assignment_file')) {
         $path = $request->file('assignment_file')->store('assignments');
@@ -99,26 +97,6 @@ public function destroy($id)
 
     return redirect()->route('assignments.index', ['course' => $course_id]);
 }
-    public function submit(Assignment $assignment, Request $request)
-    {
-        $validatedData = $request->validate([
-            'submission' => 'required|mimes:pdf,doc,docx|max:2048',
-        ]);
-
-        if ($request->hasFile('submission')) {
-            $file = $request->file('submission');
-            $filename = $file->getClientOriginalName();
-            $file->storeAs('submissions', $filename); // Store the submission file in a storage directory
-            $assignment->submissions()->create([
-                'user_id' => auth()->id(),
-                'filename' => $filename,
-            ]);
-
-            return redirect()->back()->with('success', 'Assignment submitted successfully.');
-        }
-
-        return redirect()->back()->with('error', 'Submission failed. Please try again.');
-    }
     public function download($id)
     {
         $assignment = Assignment::findOrFail($id);
@@ -130,5 +108,24 @@ public function destroy($id)
             return redirect()->back()->with('error', 'File not found.');
         }
     }
-    
+    public function submit(Assignment $assignment, Request $request)
+{
+    $validatedData = $request->validate([
+        'submission' => 'required|mimes:pdf,doc,docx|max:2048',
+    ]);
+
+    if ($request->hasFile('submission')) {
+        $file = $request->file('submission');
+        $filename = $file->getClientOriginalName();
+        $file->storeAs('submissions', $filename); // Store the submission file in a storage directory
+        $assignment->submissions()->create([
+            'user_id' => auth()->id(),
+            'filename' => $filename,
+        ]);
+
+        return redirect()->back()->with('success', 'Assignment submitted successfully.');
+    }
+
+    return redirect()->back()->with('error', 'Submission failed. Please try again.');
+}
 }

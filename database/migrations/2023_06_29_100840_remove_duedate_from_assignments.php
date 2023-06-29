@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assignments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('course_id');
-            $table->foreignId('feedback_id')->nullable();
-            $table->string('title');
-            $table->string('task');
-            $table->timestamps();
+        Schema::table('assignments', function (Blueprint $table) {
+            //
         });
-    
     }
 
     /**
@@ -27,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('assignments', function (Blueprint $table) {
+            //
+        });
     }
 };

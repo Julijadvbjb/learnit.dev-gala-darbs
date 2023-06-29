@@ -32,7 +32,10 @@ public function assignments()
 {
     return $this->hasMany(Assignment::class);
 }
-
+public function files()
+    {
+        return $this->hasMany(File::class);
+    }
 
     public function category()
 {

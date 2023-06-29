@@ -38,11 +38,12 @@ public function filter(Request $request)
 
 public function show(Course $course): View
 {
-    $course->load(['lecturer', 'category']);  // Eager load relationships
+    $course->load(['lecturer', 'category', 'files']);  // Eager load relationships
 
     $assignments = $course->assignments;
     return view('course.show', ['course' => $course, 'assignments' => $assignments]);
 }
+
 
  
     public function create()
@@ -114,17 +115,12 @@ public function getRouteKeyName()
 
         return view('course.list', compact('courses'));
     }
-    public function destroy($course)
+    public function destroy(Course $course)
     {
-        // Find the course by its ID
-        $course = Course::findOrFail($course);
-
-        // Delete the course
         $course->delete();
-
-        // Redirect to a success page or the course list
         return redirect()->route('course.index');
     }
+    
     public function enroll(Course $course)
     {
         $user = auth()->user();
@@ -137,8 +133,12 @@ public function getRouteKeyName()
             ->withProperties(['ip' => request()->getClientIp(), 'user_agent' => request()->userAgent()])
             ->log($user->name . ' enrolled in ' . $course->name);
     
-        return redirect()->back()->with('success', 'You have successfully enrolled in the course.');
-    }
+            return redirect()->back()->with([
+                'success' => __('messages.You have successfully enrolled in the course.'), 
+                'enrolledCourseId' => $course->id
+            ]);
+        }          
+    
 public function showEnrolledCourses(): View
 {
     $user = auth()->user();
@@ -149,10 +149,11 @@ public function showEnrolledCourses(): View
 }
 public function myCourse(int $course): View
 {
-    $course = Course::findOrFail($course);
+    $course = Course::with('files')->findOrFail($course);
 
     return view('course.mycourse', compact('course'));
 }
+
 public function myAssignments()
 {
     $user = Auth::user(); 

@@ -91,7 +91,6 @@ return [
     'Duedate'=>'Duedate',
     'Assignment File'=>'Assignment File',
     'Download Assignment File'=>'Download Assignment File',
-    'No assignments at the moment'=>'No assignments at the moment',
     'Add a new assignment'=>'Add a new assignment',
     'create new assignment'=>'create new assignment',
 #dashboard
@@ -121,6 +120,21 @@ return [
     'language'=>'language',
     'English'=> 'English',
     'Latvian'=>'Latvian',
+    'Delete User'=>'Delete User',
+    'Upload'=>'Upload',
+    'Download'=>'Download',
+    'Info'=>'Info',
+    'With'=>'With our platform you can learn on your own.',
+    'Do assignments'=>'Do assignments and learn even more!',
+    'No assignments'=>'No assignments available at the moment.',
+    'Creating new Course'=>'Creating new Course',
+    'List of lecturers'=>'List of lecturers',
+    'You are not enrolled'=>'You are not enrolled in any courses.',
+    'No assignments at'=>'No assignments at the moment! Enroll in a course.',
+    'No assignments at the moment'=>'No assignments at the moment',
+    'All Registered Users'=>'All Registered Users',
+    'You have successfully enrolled in the course.'=>'You have successfully enrolled in the course.',
+    'Creating new assignment'=>'Creating new assignment',
 ];
 
 

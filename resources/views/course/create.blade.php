@@ -6,6 +6,11 @@
     </x-slot>
 
     <div class="py-12">
+    <div class="text-center">
+            <h2 class="font-semibold text-2xl text-white leading-tight">
+        {{__('messages.Creating new Course')}}<br><br>
+            </h2>
+    </div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -17,9 +22,9 @@
                                 @error('name')
                                 <div class="alert">{{ $message }}</div>
                                 @enderror
-                                <label for="name">{{ __('messages.please confirm') }}</label>
+                                <label for="name">{{ __('messages.Title') }}</label>
                                 <input type="text" name="name" id="name" value="{{ old('name') }}" />
-                            </div>
+                            </div><br>
                             <div>
                                 @error('category')
                                 <div class="alert">{{ $message }}</div>
@@ -35,6 +40,7 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <br>
                             <div>
                                 @error('lecturer_id')
                                 <div class="alert">{{ $message }}</div>
@@ -50,6 +56,7 @@
 </select>
 
                             </div>
+                            <br>
                             <div>
                                 @error('description')
                                 <div class="alert">{{ $message }}</div>
@@ -57,8 +64,8 @@
                                 <label for="description">{{ __('messages.Description') }}</label>
                                 <input id="description" name="description" type="text" value="{{ old('description') }}" />
                             </div>
-
-                            <button type="submit">{{ __('messages.Save') }}</button>
+                            <br>
+                            <x-primary-button type="submit">{{ __('messages.Save') }}</x-primary-button>
                         </fieldset>
                     </form>
                 </div>
